@@ -6,7 +6,7 @@ from fours import fours
 from fives import fives
 from sixes import sixes
 
-debug = True 
+debug = False 
 dice = [0,0,0,0,0,0]
 hands = []
 score = 0

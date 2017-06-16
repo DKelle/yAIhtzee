@@ -19,7 +19,7 @@ class ones(hand):
     expected_ones = not_ones * self.sixth
 
     #what is our expected score?
-    return cur + expected_ones, reroll
+    return (cur + expected_ones)/6, reroll
 
   def get_hand_name(self):
     return "ones"

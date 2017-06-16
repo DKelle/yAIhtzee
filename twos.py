@@ -22,4 +22,4 @@ class twos(hand):
     expected_twos = not_twos * self.sixth
 
     #what is our expected score?
-    return cur + expected_twos, reroll
+    return (cur + expected_twos)/12, reroll

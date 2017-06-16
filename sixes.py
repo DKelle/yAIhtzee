@@ -22,4 +22,4 @@ class sixes(hand):
     expected_six = not_six * self.sixth
 
     #what is our expected score?
-    return cur + expected_six, reroll
+    return (cur + expected_six)/36, reroll

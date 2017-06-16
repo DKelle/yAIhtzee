@@ -22,4 +22,4 @@ class fives(hand):
     expected_fives = not_fives * self.sixth
 
     #what is our expected score?
-    return cur + expected_fives, reroll
+    return (cur + expected_fives)/30, reroll

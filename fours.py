@@ -22,4 +22,4 @@ class fours(hand):
     expected_fours = not_fours * self.sixth
 
     #what is our expected score?
-    return cur + expected_fours, reroll
+    return (cur + expected_fours)/24, reroll

@@ -22,4 +22,4 @@ class threes(hand):
     expected_threes = not_threes * self.sixth
 
     #what is our expected score?
-    return cur + expected_threes, reroll
+    return (cur + expected_threes)/18, reroll

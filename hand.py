@@ -2,7 +2,7 @@ class hand:
 
   def __init__(self):
     self.taken = False
-    self.sixth = 1/6
+    self.sixth = 1.0/6.0
 
   def get_points(self, dice):
     pass

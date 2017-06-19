@@ -1,4 +1,5 @@
 from random import randint
+from three_of_a_kind import three_of_a_kind
 from upper_section_hand import upper_section_hand
 
 debug = False 
@@ -17,6 +18,7 @@ def init_hands():
   hands.append(upper_section_hand(4))
   hands.append(upper_section_hand(5))
   hands.append(upper_section_hand(6))
+  hands.append(three_of_a_kind())
 
 def take_turn():
   global score

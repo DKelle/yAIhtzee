@@ -3,7 +3,7 @@ from lower_section_hand import lower_section_hand
 class small_straight(lower_section_hand):
 
   def get_points(self, dice):
-    sequence = len(get_max_sequence(dice))
+    sequence = len(self.get_max_sequence(dice))
 
     if sequence >= 4:
       return 30
@@ -23,74 +23,58 @@ class small_straight(lower_section_hand):
   def get_hand_name(self):
     return "Small straight"
 
+  def get_probability_of_method(self, dice, goal, debug):
+    #how much of what we need do we already have?
+    bitmap = [1 if i in dice else 0 for i in goal]
+    number_still_needed = bitmap.count(0) 
+    number_to_reroll = number_still_needed + 1 #We have at least 1 die that isnt helping since we need a run of 4
+
+    if debug:
+      print 'bitmap: ' + str(bitmap)  
+      print 'number still needed: ' + str(number_still_needed)  
+      print 'number to reroll: ' + str(number_to_reroll)  
+
+    #what is the chance of rolling what we need to complete our goal?
+    chance = self.sixth ** number_still_needed 
+    
+    #how many ways are there to complete our goal?
+    ways = self.ncr(number_to_reroll, number_still_needed)
+    
+    #What is the overall prob of getting m1?
+    probability = ways * chance
+
+    if debug:
+      print 'chance of rolling  :' + str(chance)
+      print 'ways for  ' + str(ways)
+      print 'prob  ' +str(probability)
+
+    return probability
+
   def get_weight(self, dice):
-    debug = True
+    debug = False 
     max_sequence = self.get_max_sequence(dice)
     if debug: print dice    
     if debug: print max_sequence
+
+    #there are 3 ways to get a small stright.
+    # [1,2,3,4], [2,3,4,5], [3,4,5,6] 
     
+    #What are the odds of getting method 1? (1,2,3,4)
+    p_m1 = self.get_probability_of_method(dice, [1,2,3,4], debug)
+    p_m2 = self.get_probability_of_method(dice, [2,3,4,5], debug)
+    p_m3 = self.get_probability_of_method(dice, [3,4,5,6], debug)
 
+    #out of these three methods, which are we most likely to acheive?
+    max_prob = max(p_m1, p_m2, p_m3)
+    goal = [1,2,3,4] if max_prob == p_m1 else [2,3,4,5] if max_prob == p_m2 else [3,4,5,6]
+    weight = 30 * max_prob
 
-
-
-
-
-
-
-
-    value_occurances_max, value_occurances_second = self.get_max_occurances(dice)
-
-    if debug:
-      print dice
-      print value_occurances_max 
-      print value_occurances_second
-
-    #How many do we still need to form our 3 of a kind?
-    need_for_three = 3 - min(3, value_occurances_max[-1])
-
-    #How many do we still need to form our pair?
-    need_for_two = 2 - value_occurances_second[-1]
-
-    if debug: print 'need for three: ' + str(need_for_three) 
-    if debug: print 'need for two: ' + str(need_for_two) 
-
-    #How many dice are we rerolling?
-    number_to_reroll = need_for_three + need_for_two
-
-    #which dice are we rerolling?
-    reroll = [i for i, x in enumerate(dice) if x not in [value_occurances_max[0], value_occurances_second[0]]]
-    
-    #if we have rolled 4 of something, we only want to keep 3 out of those 4
-    if value_occurances_max[-1] >= 4:
-      reroll.append(dice.index(value_occurances_max[0]))
-
-    if debug: print 'rerolling ' + str(reroll)
-
-    if debug: print 'number to reroll: ' + str(number_to_reroll)
-
-    #What are the odds of rerolling these dice, and completing our full house?
-    chance_of_three = self.sixth ** need_for_three
-    chance_of_two = self.sixth ** need_for_two
-    chance_of_both = chance_of_three * chance_of_two
-
-    if debug:
-      print 'chance of three: ' + str(chance_of_three)
-      print 'chance of two: ' + str(chance_of_two)
-      print 'chance of both: ' + str(chance_of_both)
-
-
-    #How many different ways are there for us to complete our full house?
-    ways = self.ncr(number_to_reroll, need_for_three)
-
-    if debug: print 'number of ways ' + str(ways)
-    
-    #The probability of rolling a full house is thus
-    probability = chance_of_both * ways
-    
-    if debug: print 'total prob: ' + str(probability)
-
-    #A full house is worth 25 - weight becomes 25 * our chance of getting a full house
-    weight = 25 * probability
+    #Now that we know what we are going for, what do we want to re roll?
+    reroll = []
+    for i, x in enumerate(dice):
+      if x not in goal:
+        reroll.append(i)
+      else:
+        goal.remove(x)
 
     return weight, reroll 
-

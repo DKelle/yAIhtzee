@@ -1,10 +1,5 @@
 from random import randint
-from ones import ones
-from twos import twos
-from threes import threes
-from fours import fours
-from fives import fives
-from sixes import sixes
+from upper_section_hand import upper_section_hand
 
 debug = False 
 dice = [0,0,0,0,0,0]
@@ -16,12 +11,12 @@ def init_hands():
   global hands
   hands = []
   score = 0
-  hands.append(ones())
-  hands.append(twos())
-  hands.append(threes())
-  hands.append(fours())
-  hands.append(fives())
-  hands.append(sixes())
+  hands.append(upper_section_hand(1))
+  hands.append(upper_section_hand(2))
+  hands.append(upper_section_hand(3))
+  hands.append(upper_section_hand(4))
+  hands.append(upper_section_hand(5))
+  hands.append(upper_section_hand(6))
 
 def take_turn():
   global score

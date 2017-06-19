@@ -1,9 +1,12 @@
 from random import randint
 from three_of_a_kind import three_of_a_kind
+from four_of_a_kind import four_of_a_kind
+from full_house import full_house
+from small_straight import small_straight
 from upper_section_hand import upper_section_hand
 
 debug = False 
-dice = [0,0,0,0,0,0]
+dice = [0,0,0,0,0]
 hands = []
 score = 0
 
@@ -19,6 +22,9 @@ def init_hands():
   hands.append(upper_section_hand(5))
   hands.append(upper_section_hand(6))
   hands.append(three_of_a_kind())
+  hands.append(four_of_a_kind())
+  hands.append(full_house())
+  hands.append(small_straight())
 
 def take_turn():
   global score

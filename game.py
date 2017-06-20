@@ -147,7 +147,10 @@ def take_hand(dice):
   return best_hand.take(dice)
 
 
-def run_game():
+def run_game(db = False):
+  global debug
+  debug = db
+  
   print '\n\n Welcome to yAIhtzee \n\n'
   init_hands()
   while False in [hands[i].is_taken() for i in range(len(hands))]:
@@ -156,4 +159,4 @@ def run_game():
   return score
 
 if __name__ =="__main__":
-  run_game()
+  run_game(True)

@@ -112,3 +112,5 @@ class full_house(lower_section_hand):
 
     return weight, reroll 
 
+  def get_average_score(self):
+    return 25

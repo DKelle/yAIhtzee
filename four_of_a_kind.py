@@ -70,3 +70,6 @@ class four_of_a_kind(lower_section_hand):
     #what is our expected score?
     return (probability * total_score), reroll
 
+
+  def get_average_score(self):
+    return 40

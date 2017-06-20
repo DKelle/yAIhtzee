@@ -38,3 +38,6 @@ class upper_section_hand(hand):
 
   def get_hand_name(self):
     return self.hand_name_dict[self.value] if self.value in self.hand_name_dict else "NONE"
+
+  def get_average_score(self):
+    return 2.5 * self.value

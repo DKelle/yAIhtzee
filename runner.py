@@ -59,23 +59,32 @@ def get_best_hand(dice):
   hands_available = [i for i in hands if not i.is_taken()]
   number_available = len(hands_available)
 
+  if debug: print 'about to analyze projected scores for this roll'
 
   #To decide which move we will take, we need to see what is going to maximize our score
   #To get a 'projected game score', take the actual number of points we will get for some hand
   # and then add to it the average number of points all of the other hands would give
   # for example, on average, we will probably get 2.5 points for taking ones (meaning taking 1 point for ones would be a bad move)
   projected_score_list = [0] * number_available
-  for i, h in enumerate(hands_available):
+  for j in range(len(projected_score_list)):
+    if debug: print '\tIf we take ' + hands_available[j].get_hand_name()
+
     #Taking 'weight' represents accepting this hand
     #Taking 'average score' represents taking this hand at some later point
     
-    for j in range(len(projected_score_list)):
+    for i, h in enumerate(hands_available):
       #This array will our projected score, if we take each hand still available
+      projected_hand = 0
       if i == j:
         weight, reroll = h.get_weight(dice)
-        projected_score_list[j] += weight
+        projected_hand = weight
       else:
-        projected_score_list[j] += h.get_average_score()
+        projected_hand = h.get_average_score()
+
+      projected_score_list[j] += projected_hand
+
+      if debug: print '\t\t' + h.get_hand_name() + ':' + str(projected_hand)
+    if debug: print '\tTotal projected score: ' + str(projected_score_list[j])
 
   #What is our max projected score?
   max_projected = max(projected_score_list)

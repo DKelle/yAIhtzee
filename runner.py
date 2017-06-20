@@ -3,9 +3,12 @@ from three_of_a_kind import three_of_a_kind
 from four_of_a_kind import four_of_a_kind
 from full_house import full_house
 from small_straight import small_straight
+from large_straight import large_straight
 from upper_section_hand import upper_section_hand
+from yahtzee import yahtzee
+from chance import chance
 
-debug = False 
+debug = True 
 dice = [0,0,0,0,0]
 hands = []
 score = 0
@@ -25,6 +28,10 @@ def init_hands():
   hands.append(four_of_a_kind())
   hands.append(full_house())
   hands.append(small_straight())
+  hands.append(large_straight())
+  hands.append(yahtzee())
+  hands.append(chance())
+
 
 def take_turn():
   global score
@@ -35,45 +42,100 @@ def take_turn():
     dice[i] = roll()
   if debug: print 'rolled: ' + str(dice)
 
-  #reroll() will calculate expected scores, and which dice would be best to reroll
-  dice = reroll(dice)
-  dice = reroll(dice)
+  #get_best_hand() will calculate expected scores, and which dice would be best to reroll
+  projected_best, reroll_list = get_best_hand(dice)
+  dice = reroll_dice(dice, reroll_list)
+  if debug: print 'rolled: ' + str(dice)
+  
+  #reroll one more time
+  projected_best, reroll_list = get_best_hand(dice)
+  dice = reroll_dice(dice, reroll_list)
+  if debug: print 'rolled: ' + str(dice)
+
   score += take_hand(dice)
 
-def reroll(dice):
-  max_expected_points = -1
-  dice_to_reroll = []
-  #calculate our expected points for each hand, and which dice we should re roll to go for that hand
-  for i, h in enumerate(hands):
-    if not h.is_taken():
-      exp, reroll = h.get_weight(dice)
-      if exp > max_expected_points:
-        max_expected_points = exp
-        dice_to_reroll = reroll
+def get_best_hand(dice):
+  #Get all the hands that we can still take
+  hands_available = [i for i in hands if not i.is_taken()]
+  number_available = len(hands_available)
 
+
+  #To decide which move we will take, we need to see what is going to maximize our score
+  #To get a 'projected game score', take the actual number of points we will get for some hand
+  # and then add to it the average number of points all of the other hands would give
+  # for example, on average, we will probably get 2.5 points for taking ones (meaning taking 1 point for ones would be a bad move)
+  projected_score_list = [0] * number_available
+  for i, h in enumerate(hands_available):
+    #Taking 'weight' represents accepting this hand
+    #Taking 'average score' represents taking this hand at some later point
+    
+    for j in range(len(projected_score_list)):
+      #This array will our projected score, if we take each hand still available
+      if i == j:
+        weight, reroll = h.get_weight(dice)
+        projected_score_list[j] += weight
+      else:
+        projected_score_list[j] += h.get_average_score()
+
+  #What is our max projected score?
+  max_projected = max(projected_score_list)
+  
+  #Which hand gave us this projected score?
+  best_hand_index = projected_score_list.index(max_projected) 
+  best_hand = hands_available[best_hand_index]
+
+  if debug: print 'the best projected score comes from ' + best_hand.get_hand_name()
+  
+  #now that we know the best hand, what dice do we need to reroll?
+  weight, reroll = best_hand.get_weight(dice)    
   if debug: print 'about to re roll dice ' + str(reroll)
 
-  #after we have considered all options, re roll the dice
-  dice = [roll() if i in reroll else dice[i] for i in range(len(dice)) ]
-  if debug: print 'Dice after roll 2: ' +str(dice)
-  return dice
+  #We want to return the hand that yeilds the highest projected score, and the dice that we'd need to reroll
+  return best_hand, reroll
+
+
 
 def roll():
   return randint(1,6)
+
+def reroll_dice(dice, reroll):
+  dice = [roll() if i in reroll else dice[i] for i in range(len(dice)) ]
+  return dice
+
   
 def take_hand(dice):
-  index = 0
-  max_points = -1
-  for i, h in enumerate(hands):
-    if not h.is_taken():
-      points = h.get_points(dice)
-      if debug: print 'considering taking ' + h.get_hand_name() + ' for ' +str(points)
-      if points > max_points:
-        if debug: print 'this is now the current best option'
-        index = i
-        max_points = points
+  #Get all the hands that we can still take
+  hands_available = [i for i in hands if not i.is_taken()]
+  number_available = len(hands_available)
 
-  return hands[index].take(dice)
+  #To decide which move we will take, we need to see what is going to maximize our score
+  #To get a 'projected game score', take the actual number of points we will get for some hand
+  # and then add to it the average number of points all of the other hands would give
+  # for example, on average, we will probably get 2.5 points for taking ones (meaning taking 1 point for ones would be a bad move)
+  projected_score_list = [0] * number_available
+  for i, h in enumerate(hands_available):
+    #Taking 'weight' represents accepting this hand
+    #Taking 'average score' represents taking this hand at some later point
+    
+    for j in range(len(projected_score_list)):
+      #This array will our projected score, if we take each hand still available
+      if i == j:
+        projected_score_list[j] += h.get_points(dice) 
+      else:
+        projected_score_list[j] += h.get_average_score()
+
+  #What is our max projected score?
+  max_projected = max(projected_score_list)
+  
+  #Which hand gave us this projected score?
+  best_hand_index = projected_score_list.index(max_projected) 
+  best_hand = hands_available[best_hand_index]
+
+  #now that we know the best hand, what dice do we need to reroll?
+  weight, reroll = best_hand.get_weight(dice)    
+
+  #We want to return the hand that yeilds the highest projected score, and the dice that we'd need to reroll
+  return best_hand.take(dice)
 
 
 def run_game():

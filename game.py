@@ -141,7 +141,7 @@ def take_hand(dice):
   best_hand = hands_available[best_hand_index]
 
   #now that we know the best hand, what dice do we need to reroll?
-  weight, reroll = best_hand.get_weight(dice)
+  weight, reroll = best_hand.get_weight(dice, 0)
 
   #We want to return the hand that yeilds the highest projected score, and the dice that we'd need to reroll
   return best_hand.take(dice)

@@ -1,4 +1,5 @@
 from lower_section_hand import lower_section_hand
+import probability_calculator as pc
 
 class yahtzee(lower_section_hand):
 
@@ -19,8 +20,8 @@ class yahtzee(lower_section_hand):
   def get_hand_name(self):
     return "Yahtzee"
 
-  def get_weight(self, dice):
-    debug = False 
+  def get_weight(self, dice, rolls_left):
+    debug = False
 
     #what is the greatest number of common dice we have?
     occurance_list = self.get_occurance_list(dice)
@@ -28,22 +29,24 @@ class yahtzee(lower_section_hand):
 
     #what is the face value of the dice that we have the most occurances of?
     common_roll = occurance_list.index(occurances)
-    
+
+    #Which dice would we want to reroll?
+    reroll = [i for i, x in enumerate(dice) if not x == common_roll]
+
     if debug: print 'have the most: ' + str(common_roll)
 
-    #how many dice will we have to reroll?
-    number_to_reroll = 5 - occurances
+    #Now that we know how many matches we have, what are the odds of actually getting a yahtzee
+    probabilities = pc.compute_probabilities(occurances, rolls_left)
 
-    #which dice to we want to reroll?
-    reroll = [i for i, x in enumerate(dice) if not x == common_roll ]
+    if debug: print probabilities
 
-    #What is the chance of rolling of of these, and getting exacltly what we need each time?
-    probability = self.sixth ** number_to_reroll
+    #our exp scpre is 50 * our chance of getting yahtzee
+    exp_score = 50 * probabilities.item(4)
 
-    #What is the weight we want to give to this turn
-    weight = 50 * probability
+    if debug : print 'exp score is ' + str(exp)
 
-    return weight, reroll 
+    return exp_score, reroll
+
 
   def get_average_score(self):
     return 50

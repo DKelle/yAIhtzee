@@ -61,6 +61,20 @@ def get_best_hand(dice, rolls_left):
 
   if debug: print 'about to analyze projected scores for this roll'
 
+  max_weight = -1
+  best_hand = None
+  reroll = None
+  for hand in hands_available:
+    hand_weight, roll = hand.get_weight(dice, rolls_left)
+    if hand_weight > max_weight:
+      max_weight = hand_weight
+      best_hand = hand
+      reroll = roll
+
+  return max_weight, reroll
+
+
+  """ the following is a non-greedy way to choose which hand to take - doesn't work very well
   #To decide which move we will take, we need to see what is going to maximize our score
   #To get a 'projected game score', take the actual number of points we will get for some hand
   # and then add to it the average number of points all of the other hands would give
@@ -101,6 +115,7 @@ def get_best_hand(dice, rolls_left):
 
   #We want to return the hand that yeilds the highest projected score, and the dice that we'd need to reroll
   return best_hand, reroll
+  """
 
 
 
@@ -117,6 +132,16 @@ def take_hand(dice):
   hands_available = [i for i in hands if not i.is_taken()]
   number_available = len(hands_available)
 
+  max_weight = -1
+  best_hand = None
+  for hand in hands_available:
+    hand_weight = hand.get_points(dice)
+    if hand_weight > max_weight:
+      max_weight = hand_weight
+      best_hand = hand
+
+  return best_hand.take(dice)
+  """ The following is a non-greedy way to pick a hand - it doesn't work bery well
   #To decide which move we will take, we need to see what is going to maximize our score
   #To get a 'projected game score', take the actual number of points we will get for some hand
   # and then add to it the average number of points all of the other hands would give
@@ -145,6 +170,7 @@ def take_hand(dice):
 
   #We want to return the hand that yeilds the highest projected score, and the dice that we'd need to reroll
   return best_hand.take(dice)
+  """
 
 
 def run_game(db = False):

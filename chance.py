@@ -33,5 +33,7 @@ class chance(lower_section_hand):
 
     return weight, reroll
 
-  def get_average_score(self):
-    return 50
+  def get_average_score(self, hands_left):
+    #FIXME
+    #This isn't great, but nor now let's just say that the average chance score is 3 points * 5 dice = 15
+    return 15

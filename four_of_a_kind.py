@@ -48,5 +48,39 @@ class four_of_a_kind(lower_section_hand):
     return exp_score, reroll
 
 
-  def get_average_score(self):
-    return 40
+  def get_average_score(self, hands_left):
+    debug = False 
+
+    if debug: print 'Prob of getting a ' + self.get_hand_name() + ' with only ' + str(hands_left) + ' hands left' 
+
+    #The average score of this is prob of getting 4s at /some point/ during this game * 12.5
+    initial_vector = [1,0,0,0,0]
+    probability_vector = pc.compute_probabilities(initial_vector, 2)
+
+    if debug: print 'prob vector is ' + probability_vector.to_string()
+
+    #probability_vector[0][0] is the prob that we will have only a singleton after 2 rerolls
+    #probability_vector[0][1] is the prob thta we will have only a pair after 2 rerolls etc...
+    prob = 0
+    prob += probability_vector.item(3)
+    prob += probability_vector.item(4)
+
+    if debug: print 'total prob is ' + str(prob)
+
+    #Now that we know the probability of getting a 4s, what is the probability of /not/ getting it for X hands in a row?
+    prob_of_one_miss = 1.0 - prob
+    prob_of_X_miss = prob_of_one_miss ** hands_left
+
+    if debug: print 'prob of not ever getting 4s this game: ' + str(prob_of_X_miss)
+
+    #Now that we know the probability of never getting 4s for the rest of the game...
+    prob_of_4s = 1.0 - prob_of_X_miss
+
+    if debug: print 'probability of getting 4s at some point in this game ' + str(prob_of_4s)
+
+    #12.5 comes from assuming each roll is 2.5 on average * 5 dice
+    average_score = 12.5 * prob_of_4s
+
+    if debug :print 'average score is ' + str(average_score)
+   
+    return average_score

@@ -36,7 +36,6 @@ class upper_section_hand(hand):
     for i in range(len(dice)):
         #probability of one 'good' times value of one 'good' + probability of two * value of two etc...
         if debug: print 'adding to score : ' + str((i+1) * self.value * probabilities.item(i))
-        #exp_score += (i+1) * self.value * probabilities[0][i]
         exp_score += (i+1) * self.value * probabilities.item(i)
 
     if debug: print 'exp is ' + str(exp_score)
@@ -46,5 +45,5 @@ class upper_section_hand(hand):
   def get_hand_name(self):
     return self.hand_name_dict[self.value] if self.value in self.hand_name_dict else "NONE"
 
-  def get_average_score(self):
+  def get_average_score(self, hands_left):
     return 2.5 * self.value

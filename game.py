@@ -26,11 +26,11 @@ def init_hands():
   hands.append(upper_section_hand(6))
   hands.append(three_of_a_kind())
   hands.append(four_of_a_kind())
+  hands.append(yahtzee())
+  hands.append(chance())
   hands.append(full_house())
   hands.append(small_straight())
   hands.append(large_straight())
-  hands.append(yahtzee())
-  hands.append(chance())
 
 
 def take_turn():
@@ -103,7 +103,7 @@ def get_best_hand(dice, rolls_left):
           weight, reroll = h.get_weight(dice, rolls_left)
           projected_hand = weight
         else:
-          projected_hand = h.get_average_score()
+          projected_hand = h.get_average_score(number_available)
   
         projected_score_list[j] += projected_hand
   

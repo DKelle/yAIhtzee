@@ -70,5 +70,36 @@ class large_straight(lower_section_hand):
 
     return weight, reroll
 
-  def get_average_score(self):
-    return 40
+  def get_average_score(self, hands_left):
+    #FIXME
+    #This is not going to be clean...
+    debug = False 
+
+    #So I know that the probability of getting a full house with just one roll 300/7776 (http://www.datagenetics.com/blog/january42012/)
+    #I can't figure out how to calculate the prob if we get multiple rolls
+    #So I am just going to pretend that we get 3 attempts to reroll /every dice/ and try for a full house
+    #Number from https://www.thoughtco.com/single-roll-large-straight-probability-yahtzee-3126294
+    prob = 240.0/7776.0
+     
+    #Now to account for the "rerolls"
+    prob_of_first_roll_miss = 1.0 - prob
+    prob_of_third_roll_miss = prob_of_first_roll_miss ** 3
+    prob_of_full_house = 1.0 - prob_of_third_roll_miss
+
+    if debug: print 'the prob of getting a full house in one given turn is ' + str(prob_of_full_house)
+
+    #So what is the probability of not getting a full house in the next X rolls?
+    prob_of_one_miss = 1.0 - prob_of_full_house
+    prob_of_X_miss = prob_of_one_miss ** hands_left
+
+    #Finally, what is the probability of getting a full house at /some point/ this game?
+    overall_prob = 1.0 - prob_of_X_miss
+
+    if debug: print 'the prob of getting a full house in ' + str(hands_left) + ' turns is ' + str(overall_prob)
+
+    #What is our average score?
+    average_score = 30 * overall_prob
+
+    if debug: print 'the average score is ' + str(average_score)
+
+    return average_score 

@@ -7,7 +7,7 @@ class hand:
   def get_points(self, dice):
     pass
 
-  def get_weight(self, dice):
+  def get_weight(self, dice, rolls_left):
     pass
 
   def get_hand_name(self):
@@ -22,6 +22,6 @@ class hand:
   def take(self, dice):
     self.taken = True
     points = self.get_points(dice)
-    print 'Taking ' + str(points) + ' points for taking ' + self.get_hand_name() + ' with ' + str(dice) + '\n' 
+    print 'Taking ' + str(points) + ' points for taking ' + self.get_hand_name() + ' with ' + str(dice) + '\n'
     return points
-    
+

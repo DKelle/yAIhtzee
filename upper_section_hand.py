@@ -1,4 +1,5 @@
-from hand import hand 
+from hand import hand
+import probability_calculator as pc
 
 class upper_section_hand(hand):
 
@@ -11,30 +12,35 @@ class upper_section_hand(hand):
   def get_points(self, dice):
     return self.value * dice.count(self.value)
 
-  def get_weight(self, dice):
-    debug = False 
+  def get_weight(self, dice, rolls_left):
+    debug = False
 
-    if debug: print dice
+    if debug:
+        print dice
+        print 'going for ' + str(self.value)
 
-    #What would our score be if we took this hand without re rolling?
-    cur = self.get_points(dice)
-    if debug: print 'if we go for ' + self.get_hand_name() + ' we are guarenteed ' +str(cur)
+    #How many 'good' dice do we already have?
+    good = max(dice.count(self.value), 1)
 
-    #Which dice would we re roll if we wanted to go for this hand?
+    #Which dice would we want to reroll?
     reroll = [i for i, x in enumerate(dice) if not x == self.value]
+    number_to_reroll = len(reroll)
 
-    #How many dice are "bad" rolls?
-    bad_die = len(reroll) + 0.0
-    if debug: print 'We have ' + str(bad_die) + ' that would not help this hand'
+    #Get a matrix representing the probability of ending up with 1, 2, 3, 4 or 5 'good' dice
+    probabilities = pc.compute_probabilities(good, rolls_left)
 
-    #How many "good rolls" do we expect if we reroll all of our "bad" dice?
-    expected_good = (bad_die+0.0) * self.sixth
-    if debug: print 'out of our bad die, we exped to roll this many good die: ' +str(expected_good)
-    if debug: print self.sixth
+    if debug: print probabilities
 
-    #what is our expected score?
-    if debug: print 'expected score for ' + self.get_hand_name() + ' is ' + str((cur + expected_good*self.value))
-    return cur + (expected_good * self.value), reroll
+    #Now that we know the probability of ending up with 1, 2, 3, 4, or 5 'good' dice, what is our exp score?
+    exp_score = 0
+    for i in range(len(dice)):
+        #probability of one 'good' times value of one 'good' + probability of two * value of two etc...
+        if debug: print 'adding to score : ' + str((i+1) * self.value * probabilities.item(i))
+        exp_score += (i+1) * self.value * probabilities.item(i)
+
+    if debug: print 'exp is ' + str(exp_score)
+
+    return exp_score, reroll
 
   def get_hand_name(self):
     return self.hand_name_dict[self.value] if self.value in self.hand_name_dict else "NONE"

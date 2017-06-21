@@ -26,31 +26,31 @@ class large_straight(lower_section_hand):
   def get_probability_of_method(self, dice, goal, debug):
     #how much of what we need do we already have?
     bitmap = [1 if i in dice else 0 for i in goal]
-    number_still_needed = bitmap.count(0) 
+    number_still_needed = bitmap.count(0)
     number_to_reroll = number_still_needed
 
     if debug:
-      print 'bitmap: ' + str(bitmap)  
-      print 'number still needed: ' + str(number_still_needed)  
-      print 'number to reroll: ' + str(number_to_reroll)  
+      print 'bitmap: ' + str(bitmap)
+      print 'number still needed: ' + str(number_still_needed)
+      print 'number to reroll: ' + str(number_to_reroll)
 
     #what is the chance of rolling what we need to complete our goal?
-    probability = self.sixth ** number_still_needed 
-    
+    probability = self.sixth ** number_still_needed
+
     if debug:
       print 'prob  ' +str(probability)
 
     return probability
 
-  def get_weight(self, dice):
-    debug = False 
+  def get_weight(self, dice, rolls_left):
+    debug = False
     max_sequence = self.get_max_sequence(dice)
-    if debug: print dice    
+    if debug: print dice
     if debug: print max_sequence
 
     #there are 2 ways to get a large stright.
-    # [1,2,3,4,5], [2,3,4,5,6] 
-    
+    # [1,2,3,4,5], [2,3,4,5,6]
+
     #What are the odds of getting method 1, method 2, and method 3? method 1 = (1,2,3,4)
     p_m1 = self.get_probability_of_method(dice, [1,2,3,4,5], debug)
     p_m2 = self.get_probability_of_method(dice, [2,3,4,5,6], debug)
@@ -68,7 +68,7 @@ class large_straight(lower_section_hand):
       else:
         goal.remove(x)
 
-    return weight, reroll 
+    return weight, reroll
 
   def get_average_score(self):
     return 40

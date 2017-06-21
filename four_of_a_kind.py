@@ -41,6 +41,7 @@ class four_of_a_kind(lower_section_hand):
     for i in range(3, len(dice)):
       if debug: print 'adding to score ' + str((((i+1) * common_roll) + ((5-i-1) * 2.5 )) * probabilities.item(i))
       exp_score += (((i+1) * common_roll) + ((5-i-1) * 2.5 )) * probabilities.item(i)
+      exp_score += (((i+1) * common_roll) + ((5-i-1) * 2.5 )) * probabilities.item(i)
 
     if debug: print 'exp score is ' + str(exp_score)
 

@@ -36,6 +36,7 @@ class upper_section_hand(hand):
     for i in range(len(dice)):
         #probability of one 'good' times value of one 'good' + probability of two * value of two etc...
         if debug: print 'adding to score : ' + str((i+1) * self.value * probabilities.item(i))
+        #exp_score += (i+1) * self.value * probabilities[0][i]
         exp_score += (i+1) * self.value * probabilities.item(i)
 
     if debug: print 'exp is ' + str(exp_score)

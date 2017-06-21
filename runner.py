@@ -1,5 +1,5 @@
 import subprocess
-#from game import run_game
+from game import run_game
 
 
 if __name__ == "__main__":

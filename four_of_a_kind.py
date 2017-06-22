@@ -49,13 +49,12 @@ class four_of_a_kind(lower_section_hand):
 
 
   def get_average_score(self, hands_left):
-    debug = False 
+    debug = False
 
-    if debug: print 'Prob of getting a ' + self.get_hand_name() + ' with only ' + str(hands_left) + ' hands left' 
+    if debug: print 'Prob of getting a ' + self.get_hand_name() + ' with only ' + str(hands_left) + ' hands left'
 
     #The average score of this is prob of getting 4s at /some point/ during this game * 12.5
-    initial_vector = [1,0,0,0,0]
-    probability_vector = pc.compute_probabilities(initial_vector, 2)
+    probability_vector = pc.compute_probabilities(1, 2)
 
     if debug: print 'prob vector is ' + probability_vector.to_string()
 
@@ -82,5 +81,5 @@ class four_of_a_kind(lower_section_hand):
     average_score = 12.5 * prob_of_4s
 
     if debug :print 'average score is ' + str(average_score)
-   
+
     return average_score

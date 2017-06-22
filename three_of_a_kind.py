@@ -13,7 +13,7 @@ class three_of_a_kind(lower_section_hand):
     return "three of a kind"
 
   def get_weight(self, dice, rolls_left):
-    debug = False 
+    debug = False
     if debug: print dice
 
     #What is the greatest number of common dice we have?
@@ -46,13 +46,12 @@ class three_of_a_kind(lower_section_hand):
     return exp_score, reroll
 
   def get_average_score(self, hands_left):
-    debug = False 
+    debug = False
 
-    if debug: print 'Prob of getting a ' + self.get_hand_name() + ' with only ' + str(hands_left) + ' hands left' 
+    if debug: print 'Prob of getting a ' + self.get_hand_name() + ' with only ' + str(hands_left) + ' hands left'
 
     #The average score of this is the prob of getting 3s at /some point/ during this game * 12.5
-    initial_vector = [1,0,0,0,0]
-    probability_vector = pc.compute_probabilities(initial_vector, 2)
+    probability_vector = pc.compute_probabilities(1, 2)
 
     if debug: print 'prob vector is ' + probability_vector.to_string()
 
@@ -80,5 +79,5 @@ class three_of_a_kind(lower_section_hand):
     average_score = 12.5 * prob_of_3s
 
     if debug :print 'average score is ' + str(average_score)
-   
+
     return average_score

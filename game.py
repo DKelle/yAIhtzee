@@ -203,16 +203,12 @@ def run_game(db = False):
   #Check to see if we get the 'upper hand bonus'
   upper_section_total = 0
   for h in hands[:6]:
-    print 'adding score from ' + h.get_hand_name()
     upper_section_total += h.get_score_taken()
 
   #If the user got more than 63 points on upper hands, they get 35 point bonus
   if upper_section_total >= 63:
     score += 35
 
-  print 'total is ' + str(upper_section_total)
-
-  print 'Final score: ' + str(score)
   return score
 
 if __name__ =="__main__":

@@ -6,11 +6,9 @@ class hand:
     self.score_taken = 0
 
   def set_score_taken(self, score):
-    print 'setting score for ' +self.get_hand_name()
     self.score_taken = score
 
   def get_score_taken(self):
-    print 'getting score for ' +self.get_hand_name()
     return self.score_taken
 
   def get_points(self, dice):

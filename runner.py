@@ -93,5 +93,5 @@ if __name__ == "__main__":
 
     #Now that we have the bins, lets print a pretty graph
     for i, x in enumerate(bins):
-      print str(i*10) + '\t|' + ('*'*x)
+      print str(i*10) + '\t|' + ('*'*x) +'\t'+ str(x/5.0) + '%'
 

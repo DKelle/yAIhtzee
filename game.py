@@ -192,6 +192,7 @@ def take_hand(dice):
 
 
 def run_game(db = False):
+  global score
   global debug
   debug = db
 
@@ -209,6 +210,7 @@ def run_game(db = False):
   if upper_section_total >= 63:
     score += 35
 
+  print 'Final score: ' + str(score)
   return score
 
 if __name__ =="__main__":

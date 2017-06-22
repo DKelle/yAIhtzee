@@ -153,7 +153,9 @@ def take_hand(dice):
         max_weight = hand_weight
         best_hand = hand
 
-    return best_hand.take(dice)
+    score = best_hand.take(dice)
+    best_hand.set_score_taken(score)
+    return score
 
   else:
     """ The following is a non-greedy way to pick a hand - it doesn't work bery well """
@@ -184,7 +186,9 @@ def take_hand(dice):
     weight, reroll = best_hand.get_weight(dice, 0)
 
     #We want to return the hand that yeilds the highest projected score, and the dice that we'd need to reroll
-    return best_hand.take(dice)
+    score = best_hand.take(dice)
+    best_hand.set_score_taken(score)
+    return score
 
 
 def run_game(db = False):
@@ -195,6 +199,19 @@ def run_game(db = False):
   init_hands()
   while False in [hands[i].is_taken() for i in range(len(hands))]:
     take_turn()
+
+  #Check to see if we get the 'upper hand bonus'
+  upper_section_total = 0
+  for h in hands[:6]:
+    print 'adding score from ' + h.get_hand_name()
+    upper_section_total += h.get_score_taken()
+
+  #If the user got more than 63 points on upper hands, they get 35 point bonus
+  if upper_section_total >= 63:
+    score += 35
+
+  print 'total is ' + str(upper_section_total)
+
   print 'Final score: ' + str(score)
   return score
 

@@ -14,11 +14,28 @@ class yahtzee(lower_section_hand):
     max_count = max(count_1, count_2, count_3, count_4, count_5, count_6)
 
     if max_count == 5:
+      if self.taken == True:
+        raw_input("Got second yahztee!!")
+        return 100
       return 50
     return 0
 
   def get_hand_name(self):
     return "Yahtzee"
+
+  def take(self, dice):
+    points = self.get_points(dice)
+    self.taken = True
+    print 'Taking ' +str(points) + ' points for taking ' + self.get_hand_name() + ' with ' + str(dice)
+    if points > 0:
+      self.successful = True
+    else:
+      self.successful = False
+
+    return points
+
+  def is_successful(self):
+    return self.successful
 
   def get_weight(self, dice, rolls_left):
     debug = False

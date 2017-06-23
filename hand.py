@@ -29,6 +29,6 @@ class hand:
   def take(self, dice):
     self.taken = True
     points = self.get_points(dice)
-    print 'Taking ' + str(points) + ' points for taking ' + self.get_hand_name() + ' with ' + str(dice) + '\n'
+    print 'Taking ' + str(points) + ' points for taking ' + self.get_hand_name() + ' with ' + str(dice)
     return points
 

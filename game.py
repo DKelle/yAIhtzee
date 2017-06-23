@@ -56,8 +56,17 @@ def take_turn():
 
 def get_best_hand(dice, rolls_left):
   #Get all the hands that we can still take
-  hands_available = [i for i in hands if not i.is_taken()]
+  hands_available = [i for i in hands if not i.is_taken() or "Yahtzee" in i.get_hand_name()]
   number_available = len(hands_available)
+
+  #We are only allowed to consider Yahtzee if we haven't already taken it, or if we successfully took it already
+  yahtzee_hand = [i for i in hands_available if  "Yahtzee" in i.get_hand_name()][0]
+  yahtzee_taken = yahtzee_hand.is_taken()
+  if yahtzee_taken:
+    if not yahtzee_hand.is_successful():
+      #Take out yahtzee from hands available
+      hands_available = [i for i in hands if not i.is_taken()]
+
 
   if debug: print 'about to analyze projected scores for this roll'
 
@@ -141,8 +150,22 @@ def take_hand(dice):
   greedy = False
 
   #Get all the hands that we can still take
-  hands_available = [i for i in hands if not i.is_taken()]
+  hands_available = [i for i in hands if not i.is_taken() or "Yahtzee" in i.get_hand_name()]
   number_available = len(hands_available)
+
+  #We need to check if Yahtzee is actually an available hand
+  #ie, If the the player has already taken one yahtzee, he does have the option to take another
+  #But only if he actually has the yahtzee. You can't simply take a 0 for yahtzee if you have already taken it once
+  #
+  #Why would you even want to do that?
+  #Roll a terrible roll, but don't want to take 0 for your 4 of a kind?
+  #Take zero for that second yahtzee, you probably won't get yahtzee anyway
+  yahtzee_hand = [i for i in hands if  "Yahtzee" in i.get_hand_name()][0]
+  yahtzee_points = yahtzee_hand.get_points(dice)
+  if not yahtzee_points > 0:
+    #Take yahtzee out of the list of available hands
+    hands_available = [i for i in hands if not i.is_taken()]
+    number_available = len(hands_available)
 
   if greedy:
     max_weight = -1

@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     #print out information about the distribution of scores
     bins = []
-    for i in range(0,300, 10):
+    for i in range(0,max(score_list)+10, 10):
      #Count the number of scores that were in the range i-i+10
      bins.append(len([s for s in scores if s < (i+10) and s >= i]))
 

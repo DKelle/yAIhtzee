@@ -66,6 +66,7 @@ def get_best_hand(dice, rolls_left):
     if not yahtzee_hand.is_successful():
       #Take out yahtzee from hands available
       hands_available = [i for i in hands if not i.is_taken()]
+      number_available = len(hands_available)
 
 
   if debug: print 'about to analyze projected scores for this roll'
@@ -152,6 +153,15 @@ def take_hand(dice):
   #Get all the hands that we can still take
   hands_available = [i for i in hands if not i.is_taken() or "Yahtzee" in i.get_hand_name()]
   number_available = len(hands_available)
+
+  #We are only allowed to consider Yahtzee if we haven't already taken it, or if we successfully took it already
+  yahtzee_hand = [i for i in hands_available if  "Yahtzee" in i.get_hand_name()][0]
+  yahtzee_taken = yahtzee_hand.is_taken()
+  if yahtzee_taken:
+    if not yahtzee_hand.is_successful():
+      #Take out yahtzee from hands available
+      hands_available = [i for i in hands if not i.is_taken()]
+      number_available = len(hands_available)
 
   #We need to check if Yahtzee is actually an available hand
   #ie, If the the player has already taken one yahtzee, he does have the option to take another

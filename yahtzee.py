@@ -15,7 +15,6 @@ class yahtzee(lower_section_hand):
 
     if max_count == 5:
       if self.taken == True:
-        raw_input("Got second yahztee!!")
         return 100
       return 50
     return 0
